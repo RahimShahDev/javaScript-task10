@@ -1,49 +1,48 @@
-function createCard() {
-  let title = document.getElementById("title").value;
-  let message = document.getElementById("message").value;
-  if (title.trim() === "" || message.trim() === "") {
-    alert("Please enter both a title and a message.");
+function addEntry() {
+  const id = document.getElementById("id").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const address = document.getElementById("address").value.trim();
+  const contact = document.getElementById("contact").value.trim();
+
+  if (!id || !name || !address || !contact) {
+    alert("Please fill all fields!");
     return;
-  } else {
-    renderDom(title, message);
-    document.getElementById("title").value = "";
-    document.getElementById("message").value = "";
   }
-}
-function removeItem(event) {
-  event.parentElement.remove();
-}
-function renderDom(title, message) {
-  let cardHTML = `
-    <div class="js_body">
-    <span onClick="removeItem(this)" class ="remove-item">x</span>
-        <div class="js_container">
-            <h1 class="js_title">${title}</h1>
-            <p class="js_message">${message}</p>
-        </div>
-    </div>
-    `;
-  document.getElementById("card_container").innerHTML += cardHTML;
+
+  const tableBody = document.getElementById("tableBody");
+  const rowHTML = `
+    <tr>
+      <td>${id}</td>
+      <td>${name}</td>
+      <td>${address}</td>
+      <td>${contact}</td>
+      <td><button class="btn-remove" onclick="removeRow(this)">Remove</button></td>
+    </tr>
+  `;
+  tableBody.innerHTML += rowHTML;
+
+  // Clear form fields
+  document.getElementById("id").value = "";
+  document.getElementById("name").value = "";
+  document.getElementById("address").value = "";
+  document.getElementById("contact").value = "";
 }
 
-function search() {
-  const searchTerm = document
-    .getElementById("search")
-    .value.trim()
-    .toLowerCase();
-  const cards = document.querySelectorAll(".js_body");
+function removeRow(button) {
+  button.closest("tr").remove();
+}
 
-  cards.forEach((card) => {
-    const title = card
-      .querySelector(".js_title")
-      .textContent.trim()
-      .toLowerCase();
-    if (title.includes(searchTerm)) {
-      card.style.display = "block";
+function searchTable() {
+  const searchTerm = document.getElementById("searchTable").value.toLowerCase();
+  const rows = document.querySelectorAll("#tableBody tr");
+
+  rows.forEach(row => {
+    const id = row.cells[0].textContent.toLowerCase();
+    const name = row.cells[1].textContent.toLowerCase();
+    if (id.includes(searchTerm) || name.includes(searchTerm)) {
+      row.style.display = "";
     } else {
-      card.style.display = "none";
+      row.style.display = "none";
     }
   });
 }
-
-// Create a table with fields names (id, name, Address, Contact number etc) and asign a values with this fields of the table, and then search by name or by id of the particular entry of the fields of the table.
